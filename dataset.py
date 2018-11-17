@@ -9,6 +9,7 @@ Created on Sat Nov 17 12:23:59 2018
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn.model_selection import train_test_split
+from textblob import TextBlob # sentiment analysis
 # Datetime
 from datetime import datetime
 
@@ -67,9 +68,15 @@ def countBuzzwords(desc):
     for bw in buzzwords: 
         count += lowerCase.count(bw)
     return count 
-    
+
 train_data['buzzword_count'] = train_data['desc'].apply(lambda d: countBuzzwords(d))
 
+def sentimentAnalysis(text):
+    analysis = TextBlob(str(text)).sentiment
+    return analysis
+
+train_data['text_polarity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).polarity)
+train_data['text_subjectivity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).subjectivity)
 
 ########## Format dataset ##########
 def getFeatures(x_features=[], y_feature='final_status'): 
