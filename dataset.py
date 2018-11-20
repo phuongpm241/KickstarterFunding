@@ -79,8 +79,8 @@ train_data['text_polarity'] = train_data['desc'].apply(lambda text: sentimentAna
 train_data['text_subjectivity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).subjectivity)
 
 ########## Format dataset ##########
-def getFeatures(x_features=[], y_feature='final_status'): 
-    if len(x_features) == 0:
+def getFeatures(x_features=None, y_feature='final_status'): 
+    if len(x_features) == None:
         X = train_data
     else:
         X = train_data[x_features]
