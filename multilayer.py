@@ -11,6 +11,9 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, BatchNormalization
 from keras.optimizers import Adagrad, Adamax, Adam, Adadelta, SGD
 
+
+    
+
 def trilayer(input_size, rate=0.05):
     model = Sequential()
     model.add(Dense(units=100, activation='sigmoid', input_dim=input_size, kernel_initializer='random_uniform'))
@@ -50,13 +53,13 @@ def multilayer(input_size, rate=0.05):
 if __name__ == '__main__':
     X, y = getFeatures(x_features = ['log_goal', 'country', 'currency', 'backers_count',
                                      'duration_weeks', 'text_polarity', 'text_subjectivity'])
-    X_train, X_test, y_train, y_test = splitData(X, y, 0.2, ['country', 'currency'])
+    X_train, X_test, y_train, y_test = splitData(X, y, 0, ['country', 'currency'])
 
     model = trilayer(X_train.shape[1])
     model.fit(X_train, y_train, batch_size = 128,\
-                       epochs = 50, validation_split=0.1)
+                       epochs = 50, validation_split=0.2)
 
-    score = model.evaluate(X_test, y_test, batch_size=128)
-    print ('- test_loss: ' + str(score[0]) + ' - test_acc: ' + str(score[1]))
+#    score = model.evaluate(X_test, y_test, batch_size=128)
+#    print ('- test_loss: ' + str(score[0]) + ' - test_acc: ' + str(score[1]))
 
 
