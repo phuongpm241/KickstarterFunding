@@ -14,11 +14,13 @@ def plotModels(x, train_acc, val_acc, xlabel, ylabel, title):
 	plt.legend(loc='best')
 	plt.show() 
 
-def plotParameters(x, y, title):
-	plt.plot(x,y,'-')
-	plt.xlabel('x')
-	plt.ylabel('y')
+def plotParameters(x, train_acc, val_acc, xlabel, ylabel, title):
+	plt.plot(x, train_acc, 'g-', label='Training Accuracy')
+	plt.plot(x, val_acc, 'b-', label='Validation Accuracy')
+	plt.ylabel(ylabel)
+	plt.xlabel(xlabel)
 	plt.title(title)
+	plt.legend(loc='best')
 	plt.show()
 
 ##############################
@@ -27,13 +29,13 @@ def plotParameters(x, y, title):
 ##							##
 ##############################
 
-lambda_val = ['2e-10', '2e-8', '2e-6', '2e-4', '2e-2', '2e-1', '2e0', '2e1', '2e2', '2e4']
+lambda_val = [2e-10, 2e-8, 2e-6, 2e-4, 2e-2, 2e-1, 2e0, 2e1, 2e2, 2e4]
 train_acc = [0.652, 0.652, 0.652, 0.652, 0.668, 0.748, 0.760, 0.763, 0.801, 0.559]
 val_acc = [0.652, 0.652, 0.652, 0.652, 0.666, 0.747, 0.760, 0.763, 0.796, 0.557]
 xlabel = 'Regularization Parameter'
 ylabel = 'Accuracy'
 title = 'SVM with Varying Regularization Parameter'
-plotModels(lambda_val, train_acc, val_acc, xlabel, ylabel, title)
+plotParameters(lambda_val, train_acc, val_acc, xlabel, ylabel, title)
 
 ##############################
 ##							##
@@ -62,7 +64,7 @@ val_acc = [0.788, 0.788, 0.789, 0.788, 0.789]
 xlabel = 'Regularization Parameter'
 ylabel = 'Accuracy'
 title = 'Logistic Regression with Varying Regularization Parameter'
-plotModels(C, train_acc, val_acc, xlabel, ylabel, title)
+plotParameters(C, train_acc, val_acc, xlabel, ylabel, title)
 
 iterations = [100, 500, 1000]
 train_acc = [0.792, 0.792, 0.792]
@@ -70,7 +72,7 @@ val_acc = [0.789, 0.789, 0.789]
 xlabel = 'Iterations'
 ylabel = 'Accuracy'
 title = 'Logistic Regression with Varying Iterations'
-plotModels(iterations, train_acc, val_acc, xlabel, ylabel, title)
+plotParameters(iterations, train_acc, val_acc, xlabel, ylabel, title)
 
 ##############################
 ##							##
@@ -98,7 +100,7 @@ val_acc = [0.876, 0.871, 0.872]
 xlabel = 'Hidden Units'
 ylabel = 'Accuracy'
 title = 'Neural Network with Varying Hidden Units'
-plotModels(units, train_acc, val_acc, xlabel, ylabel, title)
+plotParameters(units, train_acc, val_acc, xlabel, ylabel, title)
 
 # Input -> 100 -> 50 -> 10 -> Output
 # Input -> 1000 -> 500 -> 100 -> Output 
@@ -110,7 +112,7 @@ val_acc = [0.876, 0.872, 0.682]
 xlabel = 'Hidden Units'
 ylabel = 'Accuracy'
 title = 'Neural Network with Varying Hidden Units'
-plotModels(units, train_acc, val_acc, xlabel, ylabel, title)
+plotParameters(units, train_acc, val_acc, xlabel, ylabel, title)
 
 # 3 Hidden Layer, Adamax, ReLU, Random Init, 100 Neurons, 50 Epochs
 # Dropout 
@@ -120,7 +122,7 @@ val_acc = [0.876, 0.875, 0.876, 0.876, 0.877, 0.868]
 xlabel = 'Dropout Probability'
 ylabel = 'Accuracy'
 title = 'Neural Network with Varying Dropout Probability'
-plotModels(dropout, train_acc, val_acc, xlabel, ylabel, title)
+plotParameters(dropout, train_acc, val_acc, xlabel, ylabel, title)
 
 # 3 Hidden Layer, ReLU, Random Init, 100 Neurons, 50 Epochs, 0.05 Dropout
 # Optimizer 
@@ -145,7 +147,7 @@ val_acc = [0.875, 0.878, 0.878]
 xlabel = 'Hidden Layers'
 ylabel = 'Accuracy'
 title = 'Neural Network with Varying Hidden Layers'
-plotModels(hidden_layer, train_acc, val_acc, xlabel, ylabel, title)
+plotParameters(hidden_layer, train_acc, val_acc, xlabel, ylabel, title)
 
 # 3 Hidden Layer, Adagrad, ReLU, Random Init, 100 Neurons, 50 Epochs, 0.05 Dropout
 # Batch Normalization 
