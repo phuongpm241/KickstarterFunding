@@ -22,10 +22,16 @@ if __name__ == '__main__':
 	train_data = pd.read_csv('train.csv')
 	train_data = parseData(train_data)
 
-	X, y = getFeatures(x_features=['log_goal','country','currency', 'backers_count', 
-		'launched_year', 'launched_month', 'duration_weeks'])
+	# X, y = getFeatures(x_features=['log_goal','country','currency', 'backers_count', 
+	# 	'launched_year', 'launched_month', 'duration_weeks'])
 
-	X_train, X_test, y_train, y_test = splitData(X, y, 0.2, ['country', 'currency', 'launched_month'])
+	# X_train, X_test, y_train, y_test = splitData(X, y, 0.2, ['country', 'currency', 'launched_month'])
+
+
+	X, y = getFeatures(x_features=['log_goal', 'backers_count', 'duration_weeks'])
+
+	X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
+
 
 
 	##############################
