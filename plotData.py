@@ -14,6 +14,21 @@ def plotModels(x, train_acc, val_acc, xlabel, ylabel, title):
 	plt.legend(loc='best')
 	plt.show() 
 
+def plotLine(x, train_acc, val_acc, xlabel, ylabel, title, xticks):
+    plt.scatter(x, train_acc, c = 'blue', marker = '.')
+    plt.plot(x, train_acc, 'b--', label = 'Train acc')
+    plt.scatter(x, val_acc, c = 'red', alpha = 1, marker = '.')
+    plt.plot(x, val_acc, 'r--', label ='Val acc', alpha = 0.7)
+    plt.legend()
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    min_val = min(min(train_acc), min(val_acc)) - 0.05
+    max_val = max(max(train_acc), max(val_acc)) + 0.05
+    plt.ylim(min_val, max_val)
+    plt.xticks(x, xticks)
+    plt.title(title)
+    plt.show()
+    
 def plotParameters(x, y, title):
 	plt.plot(x,y,'-')
 	plt.xlabel('x')
@@ -27,13 +42,15 @@ def plotParameters(x, y, title):
 ##							##
 ##############################
 
-lambda_val = ['2e-10', '2e-8', '2e-6', '2e-4', '2e-2', '2e-1', '2e0', '2e1', '2e2', '2e4']
+lambda_val_tick = ['2e-10', '2e-8', '2e-6', '2e-4', '2e-2', '2e-1', '2e0', '2e1', '2e2', '2e4']
+lambda_val = [-10,-8,-6,-4,-2,-1,0,1,2,4]
 train_acc = [0.652, 0.652, 0.652, 0.652, 0.668, 0.748, 0.760, 0.763, 0.801, 0.559]
 val_acc = [0.652, 0.652, 0.652, 0.652, 0.666, 0.747, 0.760, 0.763, 0.796, 0.557]
 xlabel = 'Regularization Parameter'
 ylabel = 'Accuracy'
 title = 'SVM with Varying Regularization Parameter'
-plotModels(lambda_val, train_acc, val_acc, xlabel, ylabel, title)
+#plotModels(lambda_val, train_acc, val_acc, xlabel, ylabel, title)
+plotLine(lambda_val, train_acc, val_acc, xlabel, ylabel, title, lambda_val_tick)
 
 ##############################
 ##							##
@@ -49,12 +66,14 @@ plotModels(lambda_val, train_acc, val_acc, xlabel, ylabel, title)
 ##############################
 
 regularizer = ['liblinear', 'lbgfs', 'saga', 'sag']
+x = [1, 2, 3, 4]
 train_acc = [0.791, 0.792, 0.745, 0.751]
 val_acc = [0.788, 0.789, 0.744, 0.750]
 xlabel = 'Solver'
 ylabel = 'Accuracy'
 title = 'Logistic Regression with Varying Solver'
 plotModels(regularizer, train_acc, val_acc, xlabel, ylabel, title)
+#plotLine(x, train_acc, val_acc, xlabel, ylabel, title, regularizer)
 
 C = [0.01, 0.1, 1, 10, 100]
 train_acc = [0.792, 0.791, 0.792, 0.791, 0.792]
