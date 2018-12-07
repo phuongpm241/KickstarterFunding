@@ -6,9 +6,28 @@ Created on Sat Nov 18 16:39:32 2018
 @author: maggiewu
 """
 
-from dataset import *
-from parseData import *
 from sklearn.linear_model import LogisticRegression
+import pandas as pd 
+from sklearn.model_selection import train_test_split
+
+def getFeatures(train_data, x_features=None, y_feature='final_status'): 
+    if len(x_features) == None:
+        X = train_data
+    else:
+        X = train_data[x_features]
+        
+    y = train_data[y_feature]
+    return X, y
+
+def splitData(X, y, size, onehot): 
+    """ Return train/test data splitted based on 'size' with certain features one-hot encoded
+        All the data returned as numpy array
+    """
+    onehot_X = pd.get_dummies(X, prefix=onehot, columns=onehot).values
+#    if size == 0:
+#        return onehot_X, [], y, []
+    X_train, X_test, y_train, y_test = train_test_split(onehot_X, y.values, test_size=size, random_state = 42)
+    return X_train, X_test, y_train, y_test
 
 def getLogisticRegression(X_train, y_train, solver='liblinear', C=1.0, max_iter=100, multi_class='multinomial'): 
 	lr = LogisticRegression(random_state=0, solver=solver, C=C, max_iter=max_iter, multi_class=multi_class)
@@ -18,7 +37,7 @@ def getLogisticRegression(X_train, y_train, solver='liblinear', C=1.0, max_iter=
 def accuracy(clf, X_train, y_train, X_test, y_test): 
 	return clf.score(X_train, y_train), clf.score(X_test, y_test)
 
-if __name__ == '__main__':
+def runLR(): 
 	train_data = pd.read_csv('train.csv')
 	train_data = parseData(train_data)
 
@@ -138,6 +157,10 @@ if __name__ == '__main__':
 
 	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
 	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+
+if __name__ == '__main__':
+	pass
 
 
 
