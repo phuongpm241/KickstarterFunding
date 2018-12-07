@@ -145,10 +145,10 @@ if __name__ == '__main__':
     y_train = y_train.replace(0, -1).values
     y_test = y_test.replace(0, -1).values
 
-    lambdas = [2e-10, 2e-5, 2e-2, 2e-1, 2e0, 2e1]
+    lambdas = [2e-5, 2e-2, 2e-1, 2e0, 2e1, 2e2, 2e3, 2e4]
     w_b = {}
     accs = {}
-    epochs = [10, 50, 100]
+    epochs = [5, 10, 25, 50, 100]
     for epoch in epochs:
         for l in lambdas:
             print ("epoch: ", epoch, "l: ", l)

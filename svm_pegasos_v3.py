@@ -100,7 +100,7 @@ if __name__ == '__main__':
     y_train = y_train.replace(0, -1).values
     y_test = y_test.replace(0, -1).values
 
-    max_iters = [2000000, 10000000, 50000000]
+    max_iters = [1e8]
     linear_accs = {}
     # linear kernel
     for iters in max_iters:
@@ -116,8 +116,8 @@ if __name__ == '__main__':
     print (linear_accs)
 
 ##    # polynomial kernel
-##    degrees = [2, 3, 5, 10, 25, 50]
-##    coefs = [0.1, 0.5, 1, 5, 10, 50, 100]
+##    degrees = [1, 2, 4, 8]
+##    coefs = [1e-5, 1e-1, 1, 5, 10, 25, 50, 100]
 ##    poly_accs = {}
 ##    for iters in max_iters:
 ##        for d in degrees:
@@ -135,10 +135,10 @@ if __name__ == '__main__':
 ##
 ##    # gaussian kernel
 ##    gaussian_accs = {}
-##    gammas = [1e-10, 1e-5, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e5, 'auto', 'scale']
+##    gammas = [1e5]
 ##    for g in gammas:
 ##        print ("Start training gaussian kernel...")
-##        gaussian_model = svm.SVC(gamma=g, kernel='rbf')
+##        gaussian_model = svm.SVC(gamma=g, kernel='rbf', max_iter = 1e5)
 ##        gaussian_model.fit(X_train, y_train)
 ##        print ("Finish training gaussian kernel")
 ##        gaussian_train_acc = gaussian_model.score(X_train, y_train)

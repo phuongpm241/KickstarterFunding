@@ -59,12 +59,51 @@ title = 'SVM with Varying Regularization Parameter'
 #plotModels(lambda_val, train_acc, val_acc, xlabel, ylabel, title)
 plotLine(lambda_val, train_acc, val_acc, xlabel, ylabel, title, lambda_val_tick)
 
+iterations = [5, 10, 25, 50, 100]
+train_acc = [0.802, 0.802, 0.802, 0.802, 0.801]
+val_acc = [0.797, 0.797, 0.797, 0.797, 0.797]
+xlabel = 'Iterations'
+ylabel = 'Accuracy'
+title = 'SVM with Varying Iterations'
+#plotParameters(iterations, train_acc, val_acc, xlabel, ylabel, title)
+plotLine(iterations, train_acc, val_acc, xlabel, ylabel, title, None)
+
 ##############################
 ##							##
 ##		  KERNEL SVM		##
 ##							##
 ##############################
 
+# Polynomial Kernel
+# fixed coefficient = 1
+degrees = [1, 2, 4, 8, 10]
+train_acc = [0.680, 0.764, 0.681, 0.680, 0.320]
+val_acc = [0.680, 0.762, 0.680, 0.680, 0.320]
+xlabel = 'Degree'
+ylabel = 'Accuracy'
+title = 'Polynomial Kernel SVM with Varying Degree'
+plotLine(degrees, train_acc, val_acc, xlabel, ylabel, title, None)
+
+# fix degree = 2
+coeffs = [1e-1, 1, 5, 10, 25, 50, 100]
+train_acc = [0.298,0.764,0.704,0.716,0.733,0.717,0.296]
+val_acc = [0.298,0.762,0.704,0.718,0.734,0.719,0.296]
+xlabel = 'Coefficient'
+ylabel = 'Accuracy'
+title = 'Polynomial Kernel SVM with Varying Coefficient'
+plotLine(coeffs, train_acc, val_acc, xlabel, ylabel, title, None)
+
+
+
+# Gaussian kernel
+gamma_val_tick = ['2e-10', '2e-5', '2e-2', '2e-1', '2e0', '2e0', '1e1','1e5']
+gamma_val = [-10, -5, -2, -1, 0, 1, 5]
+train_acc = [0.692,  0.821, 0.875, 0.882, 0.911, 0.957, 0.994]
+val_acc = [0.691, 0.818, 0.872, 0.873, 0.860, 0.768, 0.686]
+xlabel = 'Gamma Value'
+ylabel = 'Accuracy'
+title = 'Gaussian Kernel SVM with Varying Gamma Value'
+plotLine(gamma_val, train_acc, val_acc, xlabel, ylabel, title, gamma_val_tick)
 
 ##############################
 ##							##
