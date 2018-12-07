@@ -138,13 +138,28 @@ def AccuracySVMPolynomialKernel(X, y, alphas, poly_fn, coef, c, degree):
 
 if __name__ == '__main__':
     start = time.time()
-    X, y = getFeatures(x_features = ['log_goal', 'country', 'currency', 'backers_count',
-                                     'duration_weeks', 'text_polarity', 'text_subjectivity'])
-    X_train, X_test, y_train, y_test = splitData(X, y, 0.2, ['country', 'currency'])
+    X, y = getFeatures(x_features = ['log_goal', 'backers_count','duration_weeks'])
+    X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
     end = time.time()
     print ("split data takes: ", end-start)
     y_train = y_train.replace(0, -1).values
     y_test = y_test.replace(0, -1).values
+
+    lambdas = [2e-10, 2e-5, 2e-2, 2e-1, 2e0, 2e1]
+    w_b = {}
+    accs = {}
+    epochs = [10, 50, 100]
+    for epoch in epochs:
+        for l in lambdas:
+            print ("epoch: ", epoch, "l: ", l)
+            w, b = PegasosSVM(X_train, y_train, l, epoch)
+            train_acc = AccuracySVM(X_train, y_train, w, b)
+            test_acc = AccuracySVM(X_test, y_test, w, b)
+            w_b[(epoch, l)] = (w, b)
+            accs[(epoch, l)] = (train_acc, test_acc)
+    print ("w_b: ", w_b)
+    print ("accuracy: ", accs)
+    
 
 ##    # convert to single precision for pycuda
 ##    X_train = X_train.astype(np.float32)
@@ -171,18 +186,19 @@ if __name__ == '__main__':
     
     
 
-    linear_fn = lambda p1, p2, c: np.dot(p1.T, p2) + c
-    poly_fn = lambda p1, p2, coef, c, degree: np.power(coef*np.dot(p1.T, p2)+c, d)
-    gaussian_fn = lambda p1, p2, gamma: exp(-gamma*np.dot(p1-p2, p1-p2))
-
-    print ("Start training...")
-    max_epochs = 5
-    alphas_linear = PegasosSVMLinearKernel(X_train, y_train, 2e-1, linear_fn, max_epochs, 0)
-    print ("Finish training")
-    train_acc = AccuracySVMLinearKernel(X_train, y_train, linear_fn, 0)
-    test_acc = AccuracySVMLinearKernel(X_test, y_test, linear_fn, 0)
-    print ("train_acc: ", train_acc)
-    print ("test_acc: ", test_acc)
+##    linear_fn = lambda p1, p2, c: np.dot(p1.T, p2) + c
+##    poly_fn = lambda p1, p2, coef, c, degree: np.power(coef*np.dot(p1.T, p2)+c, d)
+##    gaussian_fn = lambda p1, p2, gamma: exp(-gamma*np.dot(p1-p2, p1-p2))
+##
+##    print ("Start training...")
+##    max_epochs = 5
+##    alphas_linear = PegasosSVMLinearKernel(X_train, y_train, 2e-1, linear_fn, max_epochs, 0)
+##    print ("Finish training")
+##    train_acc = AccuracySVMLinearKernel(X_train, y_train, linear_fn, 0)
+##    test_acc = AccuracySVMLinearKernel(X_test, y_test, linear_fn, 0)
+##    print ("train_acc: ", train_acc)
+##    print ("test_acc: ", test_acc)
+    
     
 
     
