@@ -12,14 +12,13 @@ from sklearn.model_selection import train_test_split
 from textblob import TextBlob # sentiment analysis
 # Datetime
 from datetime import datetime
-from StanfordNLPWrapper import sentiment_analysis
 
 #######Pre-process the data############
 train_data = pd.read_csv("train.csv")
 
 # Fill in missing data
-train_data['name'].fillna("")
-train_data['desc'].fillna("")
+train_data['name'].fillna(" ")
+train_data['desc'].fillna(" ")
 
 # Convert time
 date_column = ['deadline', 'state_changed_at', 'created_at', 'launched_at']
@@ -72,33 +71,13 @@ def countBuzzwords(desc):
 
 train_data['buzzword_count'] = train_data['desc'].apply(lambda d: countBuzzwords(d))
 
-# Clean the description data
-def clean_text(text):
-    desc = str(text) #Sanity check
-    content = desc.strip().replace("\"", "").replace("\'\'","")
-    return ' '.join(content.split())
-
 def sentimentAnalysis(text):
     analysis = TextBlob(str(text)).sentiment
     return analysis
 
-# The clean description will be fed into both sentiment analysis and word embedding
-train_data['clean_desc'] = train_data['desc'].apply(clean_text)
-train_data['sentiment'] = train_data['clean_desc'].apply(sentiment_analysis)
+train_data['text_polarity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).polarity)
+train_data['text_subjectivity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).subjectivity)
 
-train_data.to_csv("new_train_data.csv")
-    
-
-    
-#train_data['text_polarity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).polarity)
-#train_data['text_subjectivity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).subjectivity)
-
-###Parse the keyword to use for word embedding tokenized
-def keyword_parser(keyword):
-    return ' '.join(keyword.split('-'))
-
-train_data = pd.read_csv('final_train_data.csv')
-    
 ########## Format dataset ##########
 def getFeatures(x_features=None, y_feature='final_status'): 
     if len(x_features) == None:
@@ -116,7 +95,7 @@ def splitData(X, y, size, onehot):
     onehot_X = pd.get_dummies(X, prefix=onehot, columns=onehot).values
 #    if size == 0:
 #        return onehot_X, [], y, []
-    X_train, X_test, y_train, y_test = train_test_split(onehot_X, y.values, test_size=size, random_state = 42)
+    X_train, X_test, y_train, y_test = train_test_split(onehot_X, y, test_size=size, random_state = 42)
     return X_train, X_test, y_train, y_test
 
 
