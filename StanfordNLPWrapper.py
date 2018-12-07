@@ -7,11 +7,7 @@ Created on Thu Dec  6 10:36:26 2018
 """
 
 #### Wrapper for Stanford CoreNLP to use with Python
-#### Taken from https://www.khalidalnajjar.com/how-to-setup-and-use-stanford-corenlp-server-with-python/
-'''
-A sample code usage of the python package stanfordcorenlp to access a Stanford CoreNLP server.
-Written as part of the blog post: https://www.khalidalnajjar.com/how-to-setup-and-use-stanford-corenlp-server-with-python/ 
-'''
+#### MODIFIED from https://www.khalidalnajjar.com/how-to-setup-and-use-stanford-corenlp-server-with-python/
 
 from stanfordcorenlp import StanfordCoreNLP
 #import logging
@@ -75,36 +71,36 @@ def find_most_common(L):
             if i > max_num:
                 max_num = i
     return max_num
-        
-        
-    
+       
+# Global variable 
+sNLP = StanfordNLP()  
 def sentiment_analysis(text):
     # Take the description of the project and return a sentiment value
+    # 0: Empty
     # 1: Negative
     # 2: Neutral
     # 3: Positive
-    sNLP = StanfordNLP()
-    dict_anno = json.loads(sNLP.annotate(text))
-    all_sentiment = []
     
-    for i in dict_anno['sentences']:
-        all_sentiment.append(int(i['sentimentValue']))
-    return find_most_common(all_sentiment)
+    if len(text) == 0:
+        return 0
+    try:
+        dict_anno = json.loads(sNLP.annotate(text))
+        all_sentiment = []
+        
+        for i in dict_anno['sentences']:
+            all_sentiment.append(int(i['sentimentValue']))
+        return find_most_common(all_sentiment)
+    except:
+        return 0
     
     
         
-
+### Sanity check
 if __name__ == '__main__':
     sNLP = StanfordNLP()
-    text = 'Help us buy our house. We will really appreciate'
-    annotation = sNLP.annotate(text)
-    print("Annotate:", annotation)
-    dict_anno = json.loads(annotation)
-    print(dict_anno['sentences'][0]['sentimentValue'])
-    print(dict_anno['sentences'][0]['sentiment'])
-    
-    print(dict_anno['sentences'][1]['sentimentValue'])
-    print(dict_anno['sentences'][1]['sentiment'])
+    text = ''
+    print(sentiment_analysis(text))
+
     
 #    print("POS:", sNLP.pos(text))
 #    print("Tokens:", sNLP.word_tokenize(text))
