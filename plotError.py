@@ -5,7 +5,7 @@ import pandas as pd
 from mpl_toolkits.mplot3d import Axes3D
 import random
 
-from logistic_regression import getLogisticRegression, getFeatures, splitData
+from logistic_regression import getLogisticRegression, getFeatures, splitData, accuracy
 
 def plot3D(X_train, y_train, pred, coef):
 	fig = plt.figure()
@@ -73,9 +73,12 @@ def plot2D(X_train, y_train, pred):
 
 	colors = list() 
 	false_pos, false_neg = 0, 0
+	count = 0
 
 	for p in range(len(pred)):
 		if pred[p] != y_train[p]: 
+			if backers_count[p] == 0: 
+				count += 1
 			if pred[p] == 1: 
 				# false positive
 				colors.append('r')
@@ -88,7 +91,7 @@ def plot2D(X_train, y_train, pred):
 			new_log_goal.append(log_goal[p])
 			new_backers_count.append(backers_count[p])
 
-
+	print ('backer = 0: ' + str(count))
 	print ('false positive: ' + str(false_pos / (false_pos + false_neg)))
 	print ('false negative: ' + str(false_neg / (false_pos + false_neg)))
 
@@ -111,9 +114,13 @@ if __name__ == '__main__':
 
 	lr, clf = getLogisticRegression(X_train, y_train, solver='lbfgs')
 
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+
 	pred = clf.predict(X_train)
 
-	coef = lr.coef_[0]*1000
+	# coef = lr.coef_[0]*1000
 
 	# plot3D(X_train, y_train, pred, coef)
 	plot2D(X_train, y_train, pred)

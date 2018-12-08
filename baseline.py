@@ -11,10 +11,19 @@ import pandas as pd
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
-from keras.optimizers import Adamax
+from keras.optimizers import Adamax, SGD
 from sklearn.utils import class_weight
 
 train_data = pd.read_csv('final_train_data.csv')
+
+def basemodel(input_size, rate=0.0):
+    model=Sequential()
+    model.add(Dense(units=1, activation='sigmoid', input_dim=input_size, kernel_initializer='random_uniform'))
+    model.compile(loss='binary_crossentropy',
+              optimizer=SGD(),
+              metrics=['accuracy'])
+    return model 
+
 def simplemodel(input_size, rate = 0.2):
     model = Sequential()
     model.add(Dense(units=50, activation='relu', input_dim=input_size, kernel_initializer='random_uniform'))
@@ -47,12 +56,17 @@ if __name__ == '__main__':
                                      'duration_weeks','sentiment'])
     X_train, X_test, y_train, y_test = splitData(X, y, 0, ['sentiment'])
 
-    model = simplemodel(X_train.shape[1])
-    class_weights = class_weight.compute_class_weight('balanced',
-                                                 np.unique(y_train),
-                                                 y_train)
+    # model = simplemodel(X_train.shape[1])
+    # class_weights = class_weight.compute_class_weight('balanced',
+    #                                              np.unique(y_train),
+    #                                              y_train)
     
-    model.fit(X_train, y_train, batch_size = 128,\
-                       epochs = 30, validation_split=0.2) # class_weight = class_weights)        
+    # model.fit(X_train, y_train, batch_size = 128,\
+    #                    epochs = 30, validation_split=0.2) # class_weight = class_weights)        
+    
+    model = basemodel(X_train.shape[1])
+    model.fit(X_train, y_train, batch_size = 128, \
+                        epochs = 1, validation_split=0.2)
+
     
     
