@@ -92,45 +92,47 @@ def splitData(X, y, size, onehot):
 
 if __name__ == '__main__':
     start = time.time()
-    X, y = getFeatures(x_features = ['log_goal', 'country', 'currency', 'backers_count',
-                                     'duration_weeks', 'text_polarity', 'text_subjectivity'])
-    X_train, X_test, y_train, y_test = splitData(X, y, 0.2, ['country', 'currency'])
+    X, y = getFeatures(x_features = ['log_goal', 'backers_count',
+                                     'duration_weeks'])
+    X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
     end = time.time()
     print ("split data takes: ", end-start)
     y_train = y_train.replace(0, -1).values
     y_test = y_test.replace(0, -1).values
 
-    max_iters = [1e8]
-    linear_accs = {}
+    iters = [1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8]
+    linear_acc = {}
+
     # linear kernel
-    for iters in max_iters:
+    for iteration in iters:
+        print ("iteration ", iteration)
         print ("Start training linear kernel...")
-        linear_model = svm.SVC(kernel='linear', max_iter=iters)
+        linear_model = svm.SVC(kernel='linear', max_iter = iteration)
         linear_model.fit(X_train, y_train)
         print ("Finish training linear kernel")
         linear_train_acc = linear_model.score(X_train, y_train)
         linear_test_acc = linear_model.score(X_test, y_test)
         print ("Linear train accuracy: ", linear_train_acc)
         print ("Linear test accuracy: ", linear_test_acc)
-        linear_accs[iters] = (linear_train_acc, linear_test_acc)
-    print (linear_accs)
+        linear_acc[iteration] = (linear_train_acc, linear_test_acc)
+    print (linear_acc)
 
 ##    # polynomial kernel
-##    degrees = [1, 2, 4, 8]
-##    coefs = [1e-5, 1e-1, 1, 5, 10, 25, 50, 100]
+##    degrees = [4, 8]
+##    coefs = [1e-5, 1e-1, 1, 1e1, 1e2]
 ##    poly_accs = {}
-##    for iters in max_iters:
-##        for d in degrees:
-##            for coef in coefs:
-##                print ("Start training polynomial kernel...")
-##                poly_model = svm.SVC(kernel='poly', degree=d, coef0=coef, max_iter = iters)
-##                poly_model.fit(X_train, y_train)
-##                print ("Finish training polynomial kernel")
-##                poly_train_acc = poly_model.score(X_train, y_train)
-##                poly_test_acc = poly_model.score(X_test, y_test)
-##                print ("Polynomial train accuracy: ", poly_train_acc)
-##                print ("Polynomail test accuracy: ", poly_test_acc)
-##                poly_accs[(iters, d, coef)] = (poly_train_acc, poly_test_acc)
+##    for d in degrees:
+##        for coef in coefs:
+##            print ("Start training polynomial kernel...")
+##            poly_model = svm.SVC(kernel='poly', degree=d, coef0=coef)
+##            poly_model.fit(X_train, y_train)
+##            print ("Finish training polynomial kernel")
+##            poly_train_acc = poly_model.score(X_train, y_train)
+##            poly_test_acc = poly_model.score(X_test, y_test)
+##            print ("Degree: ", d, " coef: ", coef)
+##            print ("Polynomial train accuracy: ", poly_train_acc)
+##            print ("Polynomail test accuracy: ", poly_test_acc)
+##            poly_accs[(d, coef)] = (poly_train_acc, poly_test_acc)
 ##    print (poly_accs)
 ##
 ##    # gaussian kernel
