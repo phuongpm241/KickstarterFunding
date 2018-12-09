@@ -251,14 +251,14 @@ if __name__ == '__main__':
 ##    poly_fn = lambda p1, p2, coef, c, degree: np.power(coef*np.dot(p1.T, p2)+c, d)
 ##    gaussian_fn = lambda p1, p2, gamma: exp(-gamma*np.dot(p1-p2, p1-p2))
 ##
-##    print ("Start training...")
-##    max_epochs = 5
-##    alphas_linear = PegasosSVMLinearKernel(X_train, y_train, 2e-1, linear_fn, max_epochs, 0)
-##    print ("Finish training")
-##    train_acc = AccuracySVMLinearKernel(X_train, y_train, linear_fn, 0)
-##    test_acc = AccuracySVMLinearKernel(X_test, y_test, linear_fn, 0)
-##    print ("train_acc: ", train_acc)
-##    print ("test_acc: ", test_acc)
+    # print ("Start training...")
+    # max_epochs = 5
+    # alphas_linear = PegasosSVMLinearKernel(X_train, y_train, 2e-1, linear_fn, max_epochs, 0)
+    # print ("Finish training")
+    # train_acc = AccuracySVMLinearKernel(X_train, y_train, linear_fn, 0)
+    # test_acc = AccuracySVMLinearKernel(X_test, y_test, linear_fn, 0)
+    # print ("train_acc: ", train_acc)
+    # print ("test_acc: ", test_acc)
     
     
 
