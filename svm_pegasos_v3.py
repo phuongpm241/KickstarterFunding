@@ -95,30 +95,49 @@ if __name__ == '__main__':
     start = time.time()
 
     train_data = pd.read_csv('final_train_data.csv')
+    train_data['goal_backer_ratio'] = np.where(train_data['backers_count'] == 0, train_data['backers_count'], train_data['goal']/train_data['backers_count'])
+
     X, y = getFeatures(train_data, x_features = ['log_goal', 'backers_count',
-                                     'duration_weeks'])
+                                     'duration_weeks', 'goal_backer_ratio'])
     X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
     end = time.time()
     print ("split data takes: ", end-start)
-    y_train = y_train.replace(0, -1).values
-    y_test = y_test.replace(0, -1).values
+    # y_train = y_train.replace(0, -1).values
+    # y_test = y_test.replace(0, -1).values
 
-    iters = [1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8]
+    y_train[y_train == 0] = -1 
+    y_test[y_test == 0] = -1
+
+    # iters = [1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]
+    C = [1e-3, 1e-1, 1e0, 1e1, 1e2, 1e4]
     linear_acc = {}
 
     # linear kernel
-    for iteration in iters:
-        print ("iteration ", iteration)
-        print ("Start training linear kernel...")
-        linear_model = svm.SVC(kernel='linear', max_iter = iteration)
-        linear_model.fit(X_train, y_train)
-        print ("Finish training linear kernel")
-        linear_train_acc = linear_model.score(X_train, y_train)
-        linear_test_acc = linear_model.score(X_test, y_test)
-        print ("Linear train accuracy: ", linear_train_acc)
-        print ("Linear test accuracy: ", linear_test_acc)
-        linear_acc[iteration] = (linear_train_acc, linear_test_acc)
-    print (linear_acc)
+    # for iteration in iters:
+    #     print ("iteration ", iteration)
+    #     # print ("Start training linear kernel...")
+    #     linear_model = svm.SVC(kernel='linear', max_iter = iteration)
+    #     linear_model.fit(X_train, y_train)
+    #     # print ("Finish training linear kernel")
+    #     linear_train_acc = linear_model.score(X_train, y_train)
+    #     linear_test_acc = linear_model.score(X_test, y_test)
+    #     print ("Linear train accuracy: ", linear_train_acc)
+    #     print ("Linear test accuracy: ", linear_test_acc)
+    #     linear_acc[iteration] = (linear_train_acc, linear_test_acc)
+    # print (linear_acc)
+
+    # for c in C: 
+    #     print ("C ", c)
+    #     # print ("Start training linear kernel...")
+    #     linear_model = svm.SVC(kernel='linear', max_iter = 1e5, C=c)
+    #     linear_model.fit(X_train, y_train)
+    #     # print ("Finish training linear kernel")
+    #     linear_train_acc = linear_model.score(X_train, y_train)
+    #     linear_test_acc = linear_model.score(X_test, y_test)
+    #     print ("Linear train accuracy: ", linear_train_acc)
+    #     print ("Linear test accuracy: ", linear_test_acc)
+    #     linear_acc[c] = (linear_train_acc, linear_test_acc)
+    # print (linear_acc)
 
 ##    # polynomial kernel
 ##    degrees = [4, 8]
@@ -138,19 +157,19 @@ if __name__ == '__main__':
 ##            poly_accs[(d, coef)] = (poly_train_acc, poly_test_acc)
 ##    print (poly_accs)
 ##
-##    # gaussian kernel
-##    gaussian_accs = {}
-##    gammas = [1e5]
-##    for g in gammas:
-##        print ("Start training gaussian kernel...")
-##        gaussian_model = svm.SVC(gamma=g, kernel='rbf', max_iter = 1e5)
-##        gaussian_model.fit(X_train, y_train)
-##        print ("Finish training gaussian kernel")
-##        gaussian_train_acc = gaussian_model.score(X_train, y_train)
-##        gaussian_test_acc = gaussian_model.score(X_test, y_test)
-##        print ("Gaussian train accuracy: ", gaussian_train_acc)
-##        print ("Gaussian test accuracy: ", gaussian_test_acc)
-##        gaussian_accs[g] = (gaussian_train_acc, gaussian_test_acc)
+   # gaussian kernel
+    gaussian_accs = {}
+    gammas = [0.002]
+    for g in gammas:
+        print ("Start training gaussian kernel...")
+        gaussian_model = svm.SVC(gamma=g, kernel='rbf', max_iter = 1e5)
+        gaussian_model.fit(X_train, y_train)
+        print ("Finish training gaussian kernel")
+        gaussian_train_acc = gaussian_model.score(X_train, y_train)
+        gaussian_test_acc = gaussian_model.score(X_test, y_test)
+        print ("Gaussian train accuracy: ", gaussian_train_acc)
+        print ("Gaussian test accuracy: ", gaussian_test_acc)
+        gaussian_accs[g] = (gaussian_train_acc, gaussian_test_acc)
 
 
 ##    print ("Finish all kernels")

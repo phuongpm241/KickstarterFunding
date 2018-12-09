@@ -68,17 +68,22 @@ def plot3D(X_train, y_train, pred, coef):
 def plot2D(X_train, y_train, pred):
 	log_goal = X_train[:,0]
 	backers_count = X_train[:,1]
+	duration_weeks = X_train[:,2]
 
-	new_log_goal, new_backers_count = list(), list() 
+	new_log_goal, new_backers_count, new_duration_weeks = list(), list(), list() 
 
 	colors = list() 
 	false_pos, false_neg = 0, 0
-	count = 0
+	count, all_high_backers, high_backers = 0, 0, 0
 
 	for p in range(len(pred)):
+		if backers_count[p] > 150:
+			all_high_backers += 1
 		if pred[p] != y_train[p]: 
 			if backers_count[p] == 0: 
 				count += 1
+			if backers_count[p] > 150: 
+				high_backers += 1
 			if pred[p] == 1: 
 				# false positive
 				colors.append('r')
@@ -90,17 +95,34 @@ def plot2D(X_train, y_train, pred):
 
 			new_log_goal.append(log_goal[p])
 			new_backers_count.append(backers_count[p])
+			new_duration_weeks.append(duration_weeks[p])
 
-	print ('backer = 0: ' + str(count))
+	print ('backer = 0: ' + str(count/len(backers_count)))
+	print ('high backers: ' + str(high_backers/all_high_backers))
 	print ('false positive: ' + str(false_pos / (false_pos + false_neg)))
 	print ('false negative: ' + str(false_neg / (false_pos + false_neg)))
 
 
-	plt.scatter(new_log_goal, new_backers_count, c=colors, alpha=0.1, marker='.')
-	plt.ylabel('Backers Count')
-	plt.xlabel('Log Goal')
+	# plt.scatter(new_log_goal, new_backers_count, c=colors, alpha=0.1, marker='.')
+	# plt.ylabel('Backers Count')
+	# plt.xlabel('Log Goal')
+	# plt.title('Misclassifications on Log Goal vs. Backers Count')
 
-	plt.show() 
+	# plt.show() 
+
+	# plt.scatter(new_log_goal, new_duration_weeks, c=colors, alpha=0.1, marker='.')
+	# plt.ylabel('Duration Weeks')
+	# plt.xlabel('Log Goal')
+	# plt.title('Misclassifications on Log Goal vs. Duration Weeks')
+
+	# plt.show() 
+
+	# plt.scatter(new_backers_count, new_duration_weeks, c=colors, alpha=0.1, marker='.')
+	# plt.ylabel('Duration Weeks')
+	# plt.xlabel('Backers Count')
+	# plt.title('Misclassifications on Backers Count vs. Duration Weeks')
+
+	# plt.show() 
 	
 
 def findThirdCoord(coefs, y_coord, z_coord):

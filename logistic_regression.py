@@ -9,6 +9,7 @@ Created on Sat Nov 18 16:39:32 2018
 from sklearn.linear_model import LogisticRegression
 import pandas as pd 
 from sklearn.model_selection import train_test_split
+import numpy as np 
 
 
 def getFeatures(train_data, x_features=None, y_feature='final_status'): 
@@ -37,6 +38,18 @@ def getLogisticRegression(X_train, y_train, solver='liblinear', C=1.0, max_iter=
 
 def accuracy(clf, X_train, y_train, X_test, y_test): 
 	return clf.score(X_train, y_train), clf.score(X_test, y_test)
+
+def testLR(): 
+	train_data = pd.read_csv('final_train_data.csv')
+	train_data['goal_backer_ratio'] = np.where(train_data['backers_count'] == 0, train_data['backers_count'], train_data['goal']/train_data['backers_count'])
+
+	X, y = getFeatures(train_data, x_features=['log_goal', 'backers_count', 'duration_weeks', 'goal_backer_ratio'])
+	X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
+
+	lr, clf = getLogisticRegression(X_train, y_train, solver='lbfgs')
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
 
 def runLR(): 
 	train_data = pd.read_csv('final_train_data.csv')
@@ -286,7 +299,7 @@ def runLR():
 
 
 if __name__ == '__main__':
-	runLR()
+	testLR()
 
 
 

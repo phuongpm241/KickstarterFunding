@@ -27,9 +27,9 @@ ylabel = 'Accuracy'
 title = 'Neural Network with Varying Dropout Probability'
 plotLine(dropout_prob, train_acc, val_acc, xlabel, ylabel, title, None)
 
-units = [200, 500, 1000, 5000, 10000]
-train_acc = [0.8715, 0.8704, 0.8710, 0.8699, 0.8688]
-val_acc = [0.8777, 0.8761, 0.8755, 0.8766, 0.8759]
+units = [10, 50, 100, 200, 500, 1000, 5000, 10000]
+train_acc = [0.8324, 0.8709, 0.8715, 0.8715, 0.8704, 0.8710, 0.8699, 0.8688]
+val_acc = [0.8745, 0.8771, 0.8770, 0.8777, 0.8761, 0.8755, 0.8766, 0.8759]
 xlabel = 'Hidden Units'
 ylabel = 'Accuracy'
 title = 'Neural Network with Varying Hidden Units'

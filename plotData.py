@@ -116,6 +116,15 @@ def plotParameters(x, train_acc, val_acc, xlabel, ylabel, title):
 # ##							##
 # ##############################
 
+# epochs_tick = ['1e0', '1e1', '1e2', '1e3', '1e4', '1e5', '1e6', '1e7']
+# epochs = [0, 1, 2, 3, 4, 5, 6, 7]
+# train_acc = [0.659, 0.311, 0.304, 0.307, 0.316, 0.736, 0.751, 0.763]
+# val_acc = [0.657, 0.311, 0.305, 0.308, 0.318, 0.737, 0.750, 0.761]
+# xlabel = 'Epochs (log scale)'
+# ylabel = 'Accuracy'
+# title = 'Linear Kernel SVM with Varying Training Epochs'
+# plotLine(epochs, train_acc, val_acc, xlabel, ylabel, title, epochs_tick)
+
 # # Polynomial Kernel
 # # fixed coefficient = 1
 # degrees = [1, 2, 4, 8, 10]
@@ -135,10 +144,8 @@ def plotParameters(x, train_acc, val_acc, xlabel, ylabel, title):
 # title = 'Polynomial Kernel SVM with Varying Coefficient'
 # plotLine(coeffs, train_acc, val_acc, xlabel, ylabel, title, None)
 
-
-
 # # Gaussian kernel
-# gamma_val_tick = ['2e-10', '2e-5', '2e-2', '2e-1', '2e0', '2e0', '1e1','1e5']
+# gamma_val_tick = ['2e-10', '2e-5', '0.02', '0.2', '2', '20','2e5']
 # gamma_val = [-10, -5, -2, -1, 0, 1, 5]
 # train_acc = [0.692,  0.821, 0.875, 0.882, 0.911, 0.957, 0.994]
 # val_acc = [0.691, 0.818, 0.872, 0.873, 0.860, 0.768, 0.686]
