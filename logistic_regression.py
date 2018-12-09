@@ -10,6 +10,7 @@ from sklearn.linear_model import LogisticRegression
 import pandas as pd 
 from sklearn.model_selection import train_test_split
 
+
 def getFeatures(train_data, x_features=None, y_feature='final_status'): 
     if len(x_features) == None:
         X = train_data
@@ -29,8 +30,8 @@ def splitData(X, y, size, onehot):
     X_train, X_test, y_train, y_test = train_test_split(onehot_X, y.values, test_size=size, random_state = 42)
     return X_train, X_test, y_train, y_test
 
-def getLogisticRegression(X_train, y_train, solver='liblinear', C=1.0, max_iter=100, multi_class='multinomial'): 
-	lr = LogisticRegression(random_state=0, solver=solver, C=C, max_iter=max_iter, multi_class=multi_class)
+def getLogisticRegression(X_train, y_train, solver='liblinear', C=1.0, max_iter=100, multi_class='multinomial', tol=1e-4): 
+	lr = LogisticRegression(random_state=0, solver=solver, C=C, max_iter=max_iter, multi_class=multi_class, tol=tol)
 	clf = lr.fit(X_train, y_train)
 	return lr, clf 
 
@@ -38,19 +39,10 @@ def accuracy(clf, X_train, y_train, X_test, y_test):
 	return clf.score(X_train, y_train), clf.score(X_test, y_test)
 
 def runLR(): 
-	train_data = pd.read_csv('train.csv')
-	train_data = parseData(train_data)
+	train_data = pd.read_csv('final_train_data.csv')
 
-	# X, y = getFeatures(x_features=['log_goal','country','currency', 'backers_count', 
-	# 	'launched_year', 'launched_month', 'duration_weeks'])
-
-	# X_train, X_test, y_train, y_test = splitData(X, y, 0.2, ['country', 'currency', 'launched_month'])
-
-
-	X, y = getFeatures(x_features=['log_goal', 'backers_count', 'duration_weeks'])
-
+	X, y = getFeatures(train_data, x_features=['log_goal', 'backers_count', 'duration_weeks'])
 	X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
-
 
 
 	##############################
@@ -58,6 +50,8 @@ def runLR():
 	##		  	MODELS			##
 	##							##
 	##############################
+
+	print ('VARYING MODELS')
 
 	######## liblinear ########
 
@@ -94,6 +88,40 @@ def runLR():
 	##							##
 	##############################
 
+	print ('VARYING C')
+
+
+	######## C = 0.000001 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', C=0.000001)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+
+	######## C = 0.00001 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', C=0.00001)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+
+	######## C = 0.0001 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', C=0.0001)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+
+	######## C = 0.001 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', C=0.001)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
 	######## C = 0.01 ########
 
 	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', C=0.01)
@@ -122,10 +150,23 @@ def runLR():
 	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
 	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
 
-
 	######## C = 100 ########
 
 	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', C=100)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## C = 1000 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', C=1000)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## C = 10000 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', C=10000)
 
 	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
 	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
@@ -137,30 +178,115 @@ def runLR():
 	##							##
 	##############################
 
-	######## C = 100 ########
+	print ('VARYING ITERATIONS')
+
+	######## Iterations = 1 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', max_iter=1)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## Iterations = 5 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', max_iter=5)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+
+	######## Iterations = 10 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', max_iter=10)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## Iterations = 50 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', max_iter=50)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## Iterations = 100 ########
 
 	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', max_iter=100)
 
 	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
 	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
 
-	######## C = 500 ########
 
-	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', max_iter=500)
+
+	##############################
+	##							##
+	##		  TOLERANCE			##
+	##							##
+	##############################
+
+
+	print ('VARYING TOLERANCE')
+
+	######## Tolerance = 1e-6 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', tol=1e-6)
 
 	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
 	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
 
-	######## C = 1000 ########
+	######## Tolerance = 1e-5 ########
 
-	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', max_iter=1000)
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', tol=1e-5)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## Tolerance = 1e-4 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', tol=1e-4)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+
+	######## Tolerance = 1e-3 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', tol=1e-3)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## Tolerance = 1e-2 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', tol=1e-2)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## Tolerance = 1e-1 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', tol=1e-1)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## Tolerance = 1e0 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', tol=1e0)
+
+	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
+	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
+
+	######## Tolerance = 1e1 ########
+
+	lf, clf = getLogisticRegression(X_train, y_train, solver='lbfgs', tol=1e1)
 
 	train_score, test_score = accuracy(clf, X_train, y_train, X_test, y_test)
 	print ('- train_acc: ' + str(train_score) + ' - test_acc: ' + str(test_score))
 
 
 if __name__ == '__main__':
-	pass
+	runLR()
 
 
 
