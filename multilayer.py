@@ -10,6 +10,7 @@ Created on Sat Nov 17 16:15:32 2018
 import pandas as pd 
 import numpy as np 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, BatchNormalization
 from keras.optimizers import Adagrad, Adamax, Adam, Adadelta, SGD
@@ -135,16 +136,33 @@ def multilayer(input_size, rate=0.05):
               metrics=['accuracy'])
     return model
 
+def specificity(true, pred):
+    matrix = confusion_matrix(true, pred) 
+    return (matrix[0][0]/ (matrix[0][0] + matrix[0][1]))
+
+def metrics(true, pred): 
+    print ('confusion_matrix', confusion_matrix(true, pred))
+    print ('precision_score: ' + str(round(precision_score(true, pred), 3)))
+    print ('recall score: ' + str(round(recall_score(true, pred), 3)))
+    print ('specificity: ' + str(round(specificity(true, pred), 3)))
+    print ('f1 score: ' + str(round(f1_score(true, pred), 3)))
+
+
 if __name__ == '__main__':
     train_data = pd.read_csv('final_train_data.csv')
     train_data['goal_backer_ratio'] = np.where(train_data['backers_count'] == 0, 0, train_data['goal']/train_data['backers_count'])
 
-    X, y = getFeatures(train_data, x_features = ['log_goal', 'backers_count', 'duration_weeks', 'goal_backer_ratio'])
-    X_train, X_test, y_train, y_test = splitData(X, y, 0, [])
+    X, y = getFeatures(train_data, x_features = ['log_goal', 'backers_count', 'duration_weeks'])
+    X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
 
     model = trilayer(X_train.shape[1])
     model.fit(X_train, y_train, batch_size = 128,\
-                       epochs = 20, validation_split=0.2)
+                       epochs = 20, validation_split=0.0)
+
+    pred = model.predict(X_test)
+    pred = np.round(pred)
+
+    metrics(y_test, pred)
 
 #    score = model.evaluate(X_test, y_test, batch_size=128)
 #    print ('- test_loss: ' + str(score[0]) + ' - test_acc: ' + str(score[1]))
