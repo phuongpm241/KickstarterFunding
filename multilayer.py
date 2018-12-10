@@ -14,6 +14,7 @@ from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, BatchNormalization
 from keras.optimizers import Adagrad, Adamax, Adam, Adadelta, SGD
+from get_metrics import * 
 
 def getFeatures(train_data, x_features=None, y_feature='final_status'): 
     if len(x_features) == None:
@@ -135,18 +136,6 @@ def multilayer(input_size, rate=0.05):
               optimizer=Adamax(),
               metrics=['accuracy'])
     return model
-
-def specificity(true, pred):
-    matrix = confusion_matrix(true, pred) 
-    return (matrix[0][0]/ (matrix[0][0] + matrix[0][1]))
-
-def metrics(true, pred): 
-    print ('confusion_matrix', confusion_matrix(true, pred))
-    print ('precision_score: ' + str(round(precision_score(true, pred), 3)))
-    print ('recall score: ' + str(round(recall_score(true, pred), 3)))
-    print ('specificity: ' + str(round(specificity(true, pred), 3)))
-    print ('f1 score: ' + str(round(f1_score(true, pred), 3)))
-
 
 if __name__ == '__main__':
     train_data = pd.read_csv('final_train_data.csv')
