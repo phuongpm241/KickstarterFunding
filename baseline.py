@@ -10,10 +10,11 @@ from train_data import *
 import pandas as pd
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Merge
+from keras.layers import Dense, Dropout#, Merge
 from keras.optimizers import Adamax, SGD
 from sklearn.utils import class_weight
 from keras.callbacks import EarlyStopping, ModelCheckpoint
+from get_metrics import * 
 
 train_data = pd.read_csv('final_train_data.csv')
 
@@ -74,15 +75,20 @@ def baseline(input_size, rate=0.1):
     return model
 
 if __name__ == '__main__':
-    X, y = getFeatures(x_features = ['log_goal','backers_count','duration_weeks','sentiment'])
+    X, y = getFeatures(x_features = ['log_goal','backers_count','duration_weeks'])
     # X['backers_count'] = X['backers_count'].apply(lambda x: np.log(x) if x > 0 else 0)
 #    X['backers_count'] = np.sqrt(X['backers_count'])
-    X_train, X_test, y_train, y_test = splitData(X, y, 0, ['sentiment'])
+    X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
 
     
     model = basemodel(X_train.shape[1])
     model.fit(X_train, y_train, batch_size = 128, \
-                        epochs = 10, validation_split=0.2)
+                        epochs = 10, validation_split=0)
+
+    pred = model.predict(X_test)
+    pred = np.round(pred)
+
+    metrics(y_test, pred)
 
     
     # model = simplemodel(X_train.shape[1])
