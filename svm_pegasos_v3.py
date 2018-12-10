@@ -122,7 +122,6 @@ if __name__ == '__main__':
     train_data = pd.read_csv('train.csv')
     train_data = parseData(train_data)
     start = time.time()
-<<<<<<< HEAD
     X, y = getFeatures(x_features = ['log_goal', 'backers_count',
                                      'duration_weeks'])
     X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
@@ -150,56 +149,44 @@ if __name__ == '__main__':
 ##        linear_acc[iteration] = (linear_train_acc, linear_test_acc)
 ##    print (linear_acc)
 
-##    # polynomial kernel
-##    degrees = [2, 4, 8]
-##    coefs = [1e-5, 1e-1, 1, 1e1, 1e2]
-##    poly_accs = {}
-##    for iteration in iters:
-##        for d in degrees:
-##            for coef in coefs:
-##                print ("Start training polynomial kernel...")
-##                poly_model = svm.SVC(kernel='poly', degree=d, coef0=coef, max_iter=iteration)
-##                poly_model.fit(X_train, y_train)
-##                print ("Finish training polynomial kernel")
-##                poly_train_acc = poly_model.score(X_train, y_train)
-##                poly_test_acc = poly_model.score(X_test, y_test)
-##                print ("Iteration: ", iteration, "Degree: ", d, " coef: ", coef)
-##                print ("Polynomial train accuracy: ", poly_train_acc)
-##                print ("Polynomail test accuracy: ", poly_test_acc)
-##                poly_accs[(iteration, d, coef)] = (poly_train_acc, poly_test_acc)
-##    print (poly_accs)
+    # polynomial kernel
+    degrees = [2, 4, 8, 16]
+    coefs = [1e-5, 1e-1, 1, 1e1, 1e2]
+    poly_accs = {}
+    for d in degrees:
+        print ("Start training polynomial kernel...")
+        poly_model = svm.SVC(kernel='poly', degree=d, tol=5e-3)
+        poly_model.fit(X_train, y_train)
+        print ("Finish training polynomial kernel")
+        poly_train_acc = poly_model.score(X_train, y_train)
+        poly_test_acc = poly_model.score(X_test, y_test)
+        print ("Degree: ", d)
+        print ("Polynomial train accuracy: ", poly_train_acc)
+        print ("Polynomail test accuracy: ", poly_test_acc)
+        poly_accs[d] = (poly_train_acc, poly_test_acc)
+    print (poly_accs)
 ##
-<<<<<<< HEAD
-##    # gaussian kernel
-    gaussian_accs = {}
-    Cs = [1e-1, 1e0, 1e1, 1e2, 1e3]
+
+
+##    gaussian_accs = {}
+##    Cs = [1e-1, 1e0, 1e1, 1e2, 1e3]
 ##    gammas = [1e-10, 1e-5, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e5]
-    for c in Cs:
-        print ("Start training gaussian kernel...")
-        gaussian_model = svm.SVC(gamma=0.2, kernel='rbf', C=c)
-=======
-   # gaussian kernel
-    gaussian_accs = {}
-    gammas = [0.002]
-    for g in gammas:
-        print ("Start training gaussian kernel...")
-        gaussian_model = svm.SVC(gamma=g, kernel='rbf', max_iter = 1e5)
->>>>>>> a17099b0489811b5556814627a70484132cb3e69
-        gaussian_model.fit(X_train, y_train)
-        print ("Finish training gaussian kernel")
-        gaussian_train_acc = gaussian_model.score(X_train, y_train)
-        gaussian_test_acc = gaussian_model.score(X_test, y_test)
-<<<<<<< HEAD
-        print ("c ", c)
-        print ("Gaussian train accuracy: ", gaussian_train_acc)
-        print ("Gaussian test accuracy: ", gaussian_test_acc)
-        gaussian_accs[c] = (gaussian_train_acc, gaussian_test_acc)
-    print (gaussian_accs)
-=======
-        print ("Gaussian train accuracy: ", gaussian_train_acc)
-        print ("Gaussian test accuracy: ", gaussian_test_acc)
-        gaussian_accs[g] = (gaussian_train_acc, gaussian_test_acc)
->>>>>>> a17099b0489811b5556814627a70484132cb3e69
+##
+##   # gaussian kernel
+##    gaussian_accs = {}
+##    for g in gammas:
+##        print ("Start training gaussian kernel...")
+##        gaussian_model = svm.SVC(gamma=g, kernel='rbf', max_iter = 1e5)
+##        gaussian_model.fit(X_train, y_train)
+##        print ("Finish training gaussian kernel")
+##        gaussian_train_acc = gaussian_model.score(X_train, y_train)
+##        gaussian_test_acc = gaussian_model.score(X_test, y_test)
+##        print ("c ", c)
+##        print ("Gaussian train accuracy: ", gaussian_train_acc)
+##        print ("Gaussian test accuracy: ", gaussian_test_acc)
+##        gaussian_accs[c] = (gaussian_train_acc, gaussian_test_acc)
+##    print (gaussian_accs)
+
 
 
 ##    print ("Finish all kernels")
