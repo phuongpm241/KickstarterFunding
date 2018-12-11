@@ -118,26 +118,22 @@ if __name__ == '__main__':
     print (poly_accs)
 ##
 
-
-##    gaussian_accs = {}
-##    Cs = [1e-1, 1e0, 1e1, 1e2, 1e3]
+##    # gaussian kernel
+    gaussian_accs = {}
+    Cs = [1e-1, 1e0, 1e1, 1e2, 1e3]
 ##    gammas = [1e-10, 1e-5, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e5]
-##
-##   # gaussian kernel
-##    gaussian_accs = {}
-##    for g in gammas:
-##        print ("Start training gaussian kernel...")
-##        gaussian_model = svm.SVC(gamma=g, kernel='rbf', max_iter = 1e5)
-##        gaussian_model.fit(X_train, y_train)
-##        print ("Finish training gaussian kernel")
-##        gaussian_train_acc = gaussian_model.score(X_train, y_train)
-##        gaussian_test_acc = gaussian_model.score(X_test, y_test)
-##        print ("c ", c)
-##        print ("Gaussian train accuracy: ", gaussian_train_acc)
-##        print ("Gaussian test accuracy: ", gaussian_test_acc)
-##        gaussian_accs[c] = (gaussian_train_acc, gaussian_test_acc)
-##    print (gaussian_accs)
-
+    for c in Cs:
+        print ("Start training gaussian kernel...")
+        gaussian_model = svm.SVC(gamma=0.2, kernel='rbf', C=c)
+        gaussian_model.fit(X_train, y_train)
+        print ("Finish training gaussian kernel")
+        gaussian_train_acc = gaussian_model.score(X_train, y_train)
+        gaussian_test_acc = gaussian_model.score(X_test, y_test)
+        print ("c ", c)
+        print ("Gaussian train accuracy: ", gaussian_train_acc)
+        print ("Gaussian test accuracy: ", gaussian_test_acc)
+        gaussian_accs[c] = (gaussian_train_acc, gaussian_test_acc)
+        print (gaussian_accs)
 
 
 ##    print ("Finish all kernels")
