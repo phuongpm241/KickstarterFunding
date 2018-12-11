@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 from keras.callbacks import LambdaCallback
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Merge
+from keras.layers import Dense, Dropout#, Merge
 from keras.optimizers import Adamax, SGD
 from sklearn.utils import class_weight
 from keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 from keras.utils import plot_model
 from keras.models import Model
 from keras import backend as K
-
+from get_metrics import * 
 
 train_data = pd.read_csv('final_train_data.csv')
 

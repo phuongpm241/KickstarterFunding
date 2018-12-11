@@ -3,9 +3,6 @@ import pandas as pd
 from dataset import *
 from math import *
 import time
-##import pycuda.driver as cuda
-##import pycuda.autoinit
-##from pycude.compiler import SourceModule
 
 def PegasosSVM(X, y, l, max_epochs):
     num_data, d = X.shape
