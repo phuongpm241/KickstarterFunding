@@ -12,9 +12,9 @@ def plotModels(x, train_acc, val_acc, xlabel, ylabel, title):
     width = 0.2
     plt.bar(ind, train_acc, width, label='Training Accuracy')
     plt.bar(ind + width, val_acc, width, label='Validation Accuracy')
-    plt.ylabel(ylabel, fontsize=14)
-    plt.xlabel(xlabel, fontsize=14)
-    plt.title(title, fontsize=16)
+    plt.ylabel(ylabel)
+    plt.xlabel(xlabel)
+    plt.title(title)
     plt.xticks(ind + width / 2, x)
     plt.legend(loc='best', fontsize=14)
     plt.show() 
@@ -22,9 +22,9 @@ def plotModels(x, train_acc, val_acc, xlabel, ylabel, title):
 def plotConvergence(x, train_acc, xlabel, ylabel, title, xticks):
     plt.scatter(x, train_acc, c = 'blue', marker = '.')
     plt.plot(x, train_acc, 'b--', label = 'Conv epochs')
-    plt.legend(fontsize=14)
-    plt.xlabel(xlabel, fontsize=14)
-    plt.ylabel(ylabel, fontsize=14)
+    plt.legend()
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     min_of_min = min(train_acc)
     max_of_max = max(train_acc)
 
@@ -41,9 +41,9 @@ def plotLine(x, train_acc, val_acc, xlabel, ylabel, title, xticks):
     plt.plot(x, train_acc, 'b--', label = 'Train acc')
     plt.scatter(x, val_acc, c = 'red', alpha = 1, marker = '.')
     plt.plot(x, val_acc, 'r--', label ='Val acc', alpha = 0.7)
-    plt.legend(fontsize=16)
-    plt.xlabel(xlabel,fontsize=14)
-    plt.ylabel(ylabel,fontsize=14)
+    plt.legend()
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     min_of_min = min(min(train_acc), min(val_acc))
     max_of_max = max(max(train_acc), max(val_acc))
 
@@ -52,16 +52,16 @@ def plotLine(x, train_acc, val_acc, xlabel, ylabel, title, xticks):
     plt.ylim(min_val, max_val)
     if xticks != None:
         plt.xticks(x, xticks)
-    plt.title(title, fontsize=16)
+    plt.title(title)
     plt.show()
 
 def plotParameters(x, train_acc, val_acc, xlabel, ylabel, title):
 	plt.plot(x, train_acc, 'g-', label='Training Accuracy')
 	plt.plot(x, val_acc, 'b-', label='Validation Accuracy')
-	plt.ylabel(ylabel, fontsize=14)
-	plt.xlabel(xlabel, fontsize=14)
-	plt.title(title, fontsize=16)
-	plt.legend(loc='best', fontsize=14)
+	plt.ylabel(ylabel)
+	plt.xlabel(xlabel)
+	plt.title(title)
+	plt.legend(loc='best')
 	plt.show()
 
 
@@ -116,7 +116,7 @@ def plotParameters(x, train_acc, val_acc, xlabel, ylabel, title):
 ####		  KERNEL SVM		##
 ####							##
 ################################
-##
+### Linear Kernel
 ##epochs_tick = ['1e0', '1e1', '1e2', '1e3', '1e4', '1e5', '1e6', '1e7']
 ##epochs = [0, 1, 2, 3, 4, 5, 6, 7]
 ##train_acc = [0.659, 0.311, 0.304, 0.307, 0.316, 0.736, 0.751, 0.763]
@@ -125,6 +125,15 @@ def plotParameters(x, train_acc, val_acc, xlabel, ylabel, title):
 ##ylabel = 'Accuracy'
 ##title = 'Linear Kernel SVM with Varying Training Epochs'
 ##plotLine(epochs, train_acc, val_acc, xlabel, ylabel, title, epochs_tick)
+	
+Cs_val_tick = ['1e-10', '1e-5', '0.001', '0.1', '0']
+Cs = [-10, -5, -3, -1, 0]
+train_acc = [0.686, 0.765, 0.780, 0.782, 0.785]
+val_acc = [0.687, 0.764, 0.779, 0.780, 0.783]
+xlabel = 'Regularization Parameter'
+ylabel = 'Accuracy'
+title = 'Linear Kernel SVM with Varying Regularization Parameter'
+plotLine(Cs, train_acc, val_acc, xlabel, ylabel, title, Cs_val_tick)
 ##
 ### Polynomial Kernel
 ### fixed coefficient = 1
@@ -137,69 +146,103 @@ def plotParameters(x, train_acc, val_acc, xlabel, ylabel, title):
 ##plotLine(degrees, train_acc, val_acc, xlabel, ylabel, title, None)
 ##
 ### fix degree = 2
-##coeffs = [1e-1, 1, 5, 10, 25, 50, 100]
-##train_acc = [0.298,0.764,0.704,0.716,0.733,0.717,0.296]
-##val_acc = [0.298,0.762,0.704,0.718,0.734,0.719,0.296]
+##coeffs = [0, 1, 5, 10, 25, 50, 100]
+##train_acc = [0.819,0.764,0.744,0.736,0.733,0.717,0.296]
+##val_acc = [0.818, 0.762,0.744,0.738,0.734,0.719,0.296]
 ##xlabel = 'Coefficient'
 ##ylabel = 'Accuracy'
 ##title = 'Polynomial Kernel SVM with Varying Coefficient'
 ##plotLine(coeffs, train_acc, val_acc, xlabel, ylabel, title, None)
-##
-### Gaussian kernel
-##gamma_val_tick = ['2e-10', '2e-5', '0.02', '0.2', '2', '20','2e5']
-##gamma_val = [-10, -5, -2, -1, 0, 1, 5]
-##train_acc = [0.692,  0.821, 0.875, 0.882, 0.911, 0.957, 0.994]
-##val_acc = [0.691, 0.818, 0.872, 0.873, 0.860, 0.768, 0.686]
-##xlabel = 'Gamma Value'
+
+
+
+### Polynomial Kernel Updated
+##degrees = [2, 4, 8]
+### fixed iteration = 1e5
+##train_acc = [0.691, 0.684, 0.680]
+##val_acc = [0.691, 0.684, 0.680]
+##xlabel = 'Degree'
 ##ylabel = 'Accuracy'
-##title = 'Gaussian Kernel SVM with Varying Gamma Value'
-##plotLine(gamma_val, train_acc, val_acc, xlabel, ylabel, title, gamma_val_tick)
+##title = 'Polynomial Kernel SVM with Varying Degree'
+##plotLine(degrees, train_acc, val_acc, xlabel, ylabel, title, None)
 ##
+### fixed iteration = 1e6
+##Cs_val_tick = ['1e-3', '1e-1', '1e0', '1e1']
+##Cs = [-3, -1, 0, 1]
+##train_acc = [0.723, 0.711, 0.703, 0.308]
+##val_acc = [0.724, 0.713, 0.703, 0.309]
+##xlabel = 'Regularization Parameter'
+##ylabel = 'Accuracy'
+##title = 'Polynomial Kernel SVM with Varying Regularization Parameter'
+##plotLine(Cs, train_acc, val_acc, xlabel, ylabel, title, Cs_val_tick)
+##
+### fixed degree = 2
+##iters_val_tick = ['1e4', '1e5', '1e6', '1e7']
+##iters = [4, 5, 6, 7]
+##train_acc = [0.309, 0.691, 0.703, 0.819]
+##val_acc = [0.309, 0.691, 0.703, 0.818]
+##xlabel = 'Iterations'
+##ylabel = 'Accuracy'
+##title = 'Polynomial Kernel SVM with Varying Number of Iteration'
+##plotLine(iters, train_acc, val_acc, xlabel, ylabel, title, iters_val_tick)
+
+	
+
+# Gaussian kernel
+gamma_val_tick = ['2e-10', '2e-5', '0.02', '0.2', '2', '20','2e5']
+gamma_val = [-10, -5, -2, -1, 0, 1, 5]
+train_acc = [0.692,  0.821, 0.875, 0.882, 0.911, 0.957, 0.994]
+val_acc = [0.691, 0.818, 0.872, 0.873, 0.860, 0.768, 0.686]
+xlabel = 'Gamma Value'
+ylabel = 'Accuracy'
+title = 'Gaussian Kernel SVM with Varying Gamma Value'
+plotLine(gamma_val, train_acc, val_acc, xlabel, ylabel, title, gamma_val_tick)
+
 ## # fix gamma = 0.2
-##c_val_tick = ['1e-3', '1e-1', '1e0', '1e1', '1e2', '1e3']
-##c_val = [-3, -1, 0, 1, 2, 3]
-##train_acc = [0.680, 0.869, 0.880, 0.887, 0.892, 0.897]
-##val_acc = [0.679, 0.866, 0.871, 0.869, 0.865, 0.861]
-##x_label = 'Regularization Parameter'
-##y_label = 'Accuracy'
-##title = 'Gaussian Kernel SVM with Varying Regularization Parameter'
-##plotLine(c_val, train_acc, val_acc, xlabel, ylabel, title, c_val_tick)
-
-
-##############################
-##							##
-##	  LOGISTIC REGRESSION	##
-##							##
-##############################
-
-regularizer = ['liblinear', 'lbgfs', 'saga', 'sag']
-x = [1, 2, 3, 4]
-train_acc = [0.7841, 0.7860, 0.6760, 0.7416]
-val_acc = [0.7842, 0.7866, 0.6760, 0.7393]
-xlabel = 'Solver'
+c_val_tick = ['1e-3', '1e-1', '1e0', '1e1', '1e2', '1e3']
+c_val = [-3, -1, 0, 1, 2, 3]
+train_acc = [0.680, 0.869, 0.880, 0.887, 0.892, 0.897]
+val_acc = [0.679, 0.866, 0.871, 0.869, 0.865, 0.861]
+xlabel = 'Regularization Parameter'
 ylabel = 'Accuracy'
-title = 'Logistic Regression with Varying Solver'
-plotModels(regularizer, train_acc, val_acc, xlabel, ylabel, title)
-#plotLine(x, train_acc, val_acc, xlabel, ylabel, title, regularizer)
+title = 'Gaussian Kernel SVM with Varying Regularization Parameter'
+plotLine(c_val, train_acc, val_acc, xlabel, ylabel, title, c_val_tick)
 
-C = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10]
-x = [-6, -5, -4, -3, -2, -1, 0, 1]
-train_acc = [0.7579, 0.7668, 0.7803, 0.7855, 0.7859, 0.7861, 0.7861, 0.7861]
-val_acc = [0.7576, 0.7652, 0.7800, 0.7851, 0.7862, 0.7866, 0.7866, 0.7866] 
-xlabel = 'Regularization Parameter (log scale)'
-ylabel = 'Accuracy'
-title = 'Logistic Regression with Varying Regularization Parameter'
-#plotParameters(C, train_acc, val_acc, xlabel, ylabel, title)
-plotLine(x, train_acc, val_acc, xlabel, ylabel, title, C)
-
-iterations = [1, 10, 50, 100]
-train_acc = [0.4385, 0.7685, 0.7861, 0.7861]
-val_acc = [0.4373, 0.7682, 0.7866, 0.7866]
-xlabel = 'Iterations'
-ylabel = 'Accuracy'
-title = 'Logistic Regression with Varying Iterations'
-#plotParameters(iterations, train_acc, val_acc, xlabel, ylabel, title)
-plotLine(iterations, train_acc, val_acc, xlabel, ylabel, title, None)
+##
+################################
+####							##
+####	  LOGISTIC REGRESSION	##
+####							##
+################################
+##
+##regularizer = ['liblinear', 'lbgfs', 'saga', 'sag']
+##x = [1, 2, 3, 4]
+##train_acc = [0.7841, 0.7860, 0.6760, 0.7416]
+##val_acc = [0.7842, 0.7866, 0.6760, 0.7393]
+##xlabel = 'Solver'
+##ylabel = 'Accuracy'
+##title = 'Logistic Regression with Varying Solver'
+##plotModels(regularizer, train_acc, val_acc, xlabel, ylabel, title)
+###plotLine(x, train_acc, val_acc, xlabel, ylabel, title, regularizer)
+##
+##C = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10]
+##x = [-6, -5, -4, -3, -2, -1, 0, 1]
+##train_acc = [0.7579, 0.7668, 0.7803, 0.7855, 0.7859, 0.7861, 0.7861, 0.7861]
+##val_acc = [0.7576, 0.7652, 0.7800, 0.7851, 0.7862, 0.7866, 0.7866, 0.7866] 
+##xlabel = 'Regularization Parameter (log scale)'
+##ylabel = 'Accuracy'
+##title = 'Logistic Regression with Varying Regularization Parameter'
+###plotParameters(C, train_acc, val_acc, xlabel, ylabel, title)
+##plotLine(x, train_acc, val_acc, xlabel, ylabel, title, C)
+##
+##iterations = [1, 10, 50, 100]
+##train_acc = [0.4385, 0.7685, 0.7861, 0.7861]
+##val_acc = [0.4373, 0.7682, 0.7866, 0.7866]
+##xlabel = 'Iterations'
+##ylabel = 'Accuracy'
+##title = 'Logistic Regression with Varying Iterations'
+###plotParameters(iterations, train_acc, val_acc, xlabel, ylabel, title)
+##plotLine(iterations, train_acc, val_acc, xlabel, ylabel, title, None)
 
 ##############################
 ##							##
@@ -247,13 +290,13 @@ plotLine(iterations, train_acc, val_acc, xlabel, ylabel, title, None)
 ##
 # 3 Hidden Layer, ReLU, Random Init, 100 Neurons, 50 Epochs, 0.05 Dropout
 # Optimizer 
-optimizer = ['Adam', 'Adamax', 'Adagrad', 'SGD', 'Adadelta']
-train_acc = [0.875, 0.876, 0.876, 0.858, 0.875]
-val_acc = [0.876, 0.876, 0.877, 0.874, 0.874]
-xlabel = 'Optimizer'
-ylabel = 'Accuracy'
-title = 'Neural Network with Varying Optimizer'
-plotModels(optimizer, train_acc, val_acc, xlabel, ylabel, title)
+##optimizer = ['Adam', 'Adamax', 'Adagrad', 'SGD', 'Adadelta']
+##train_acc = [0.875, 0.876, 0.876, 0.858, 0.875]
+##val_acc = [0.876, 0.876, 0.877, 0.874, 0.874]
+##xlabel = 'Optimizer'
+##ylabel = 'Accuracy'
+##title = 'Neural Network with Varying Optimizer'
+##plotModels(optimizer, train_acc, val_acc, xlabel, ylabel, title)
 
 ### Adamax, ReLU, Random Init, 100 Neurons, 0.05 Dropout, 50 Epochs
 ### Hidden Layer 
@@ -272,22 +315,22 @@ plotModels(optimizer, train_acc, val_acc, xlabel, ylabel, title)
 
 # 3 Hidden Layer, Adagrad, ReLU, Random Init, 100 Neurons, 50 Epochs, 0.05 Dropout
 # Batch Normalization 
-normalization = ['false', 'true']
-train_acc = [0.876, 0.870]
-val_acc = [0.875, 0.576]
-xlabel = 'Batch Normalization'
-ylabel = 'Accuracy'
-title = 'Neural Network with/without Batch Normalization'
-plotModels(normalization, train_acc, val_acc, xlabel, ylabel, title)
+##normalization = ['false', 'true']
+##train_acc = [0.876, 0.870]
+##val_acc = [0.875, 0.576]
+##xlabel = 'Batch Normalization'
+##ylabel = 'Accuracy'
+##title = 'Neural Network with/without Batch Normalization'
+##plotModels(normalization, train_acc, val_acc, xlabel, ylabel, title)
 
 # 3 Hidden Layer, Adagrad Random Init, 100 Neurons, 50 Epochs, 0.05 Dropout
-activation_fn = ['relu', 'tanh', 'sigmoid']
-train_acc = [0.876, 0.871, 0.873]
-val_acc = [0.875, 0.863, 0.876]
-xlabel = 'Activation Function'
-ylabel = 'Accuracy'
-title = 'Neural Network with Varying Activation Function'
-plotModels(activation_fn, train_acc, val_acc, xlabel, ylabel, title)
+##activation_fn = ['relu', 'tanh', 'sigmoid']
+##train_acc = [0.876, 0.871, 0.873]
+##val_acc = [0.875, 0.863, 0.876]
+##xlabel = 'Activation Function'
+##ylabel = 'Accuracy'
+##title = 'Neural Network with Varying Activation Function'
+##plotModels(activation_fn, train_acc, val_acc, xlabel, ylabel, title)
 
 
 

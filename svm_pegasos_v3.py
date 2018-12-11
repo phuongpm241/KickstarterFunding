@@ -6,94 +6,36 @@ from math import *
 from datetime import datetime
 from textblob import TextBlob # sentiment analysis
 from sklearn.model_selection import train_test_split, GridSearchCV
-from dataset import *
 from parseData import *
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
+from sklearn.preprocessing import MinMaxScaler
 
-#########Pre-process the data############
-##train_data = pd.read_csv("train.csv")
-##
-### Fill in missing data
-##train_data['name'].fillna(" ")
-##train_data['desc'].fillna(" ")
-##
-### Convert time
-##date_column = ['deadline', 'state_changed_at', 'created_at', 'launched_at']
-##for i in date_column:
-##    train_data[i]=train_data[i].apply(lambda x: datetime.fromtimestamp(int(x)).strftime("%Y-%m-%d %H:%M:%S"))
-##    
-### Take the log of goal
-##train_data['log_goal'] = np.log(train_data['goal'])
-##
-### Time-related features
-##def countQuarter(dt):
-##    month = int(dt[5:7])
-##    if month <= 3: return '01'
-##    elif month <= 6:return '02'
-##    elif month <= 9: return '03'
-##    else: return '04'
-##
-##train_data['launched_month'] = train_data['launched_at'].apply(lambda dt: int(dt[5:7]))
-##train_data['launched_year'] = train_data['launched_at'].apply(lambda dt: int(dt[0:4]))
-##train_data['launched_quarter'] = train_data['launched_at'].apply(lambda dt: int(countQuarter(dt)))
-##
-##def measureDuration(dt): # Duration in hours
-##    launch = datetime.strptime(dt[0], "%Y-%m-%d %H:%M:%S")
-##    deadline = datetime.strptime(dt[1], "%Y-%m-%d %H:%M:%S")
-##    difference = deadline-launch
-##    hr_difference = int (difference.total_seconds() / 3600)
-##    return hr_difference
-##
-##train_data['duration'] = train_data[['launched_at', 'deadline']].apply(lambda dt: measureDuration(dt), axis=1)
-##
-##def measureDurationByWeek(dt):
-##    # count by hr / week 
-##    week = 168 
-##    return int (dt / week)
-##
-##train_data['duration_weeks'] = train_data['duration'].apply(lambda dt: measureDurationByWeek(dt))
-##
-### Keyword search
-##buzzwords = ['app', 'platform', 'technology', 'service', 'solution', 'data', 
-##            'manage', 'market', 'help', 'mobile', 'users', 'system', 'software', 
-##           'customer', 'application', 'online', 'web', 'create', 'health', 
-##           'provider', 'network', 'cloud', 'social', 'device', 'access']
-##
-##def countBuzzwords(desc):
-##    lowerCase = str(desc).lower() 
-##    count = 0
-##    for bw in buzzwords: 
-##        count += lowerCase.count(bw)
-##    return count 
-##
-##train_data['buzzword_count'] = train_data['desc'].apply(lambda d: countBuzzwords(d))
-##
-##def sentimentAnalysis(text):
-##    analysis = TextBlob(str(text)).sentiment
-##    return analysis
-##
-##train_data['text_polarity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).polarity)
-##train_data['text_subjectivity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).subjectivity)
-##def getFeatures(x_features=None, y_feature='final_status'): 
-##    if len(x_features) == None:
-##        X = train_data
-##    else:
-##        X = train_data[x_features]
-##        
-##    y = train_data[y_feature]
-##    return X, y
-##
-##def splitData(X, y, size, onehot): 
-##    """ Return train/test data splitted based on 'size' with certain features one-hot encoded
-##        All the data returned as numpy array
-##    """
-##    onehot_X = pd.get_dummies(X, prefix=onehot, columns=onehot).values
-###    if size == 0:
-###        return onehot_X, [], y, []
-##    X_train, X_test, y_train, y_test = train_test_split(onehot_X, y, test_size=size, random_state = 42)
-##    return X_train, X_test, y_train, y_test
-##
+def getFeatures(x_features=None, y_feature='final_status'): 
+    if len(x_features) == None:
+        X = train_data
+    else:
+        X = train_data[x_features]
+        
+    y = train_data[y_feature]
+    return X, y
+
+def splitData(X, y, size, onehot): 
+    """ Return train/test data splitted based on 'size' with certain features one-hot encoded
+        All the data returned as numpy array
+    """
+    onehot_X = pd.get_dummies(X, prefix=onehot, columns=onehot).values
+    X_train, X_test, y_train, y_test = train_test_split(onehot_X, y, test_size=size, random_state = 42)
+    return X_train, X_test, y_train, y_test
+
+def hingeLoss(X_test, y_test, model):
+    y_predict = model.predict(X_test)
+    num_data, d = X_test.shape
+    loss = 0.0
+    for i in range(num_data):
+        loss += max(0.0, 1.0- y_test[i]*y_predict[i])
+    return loss
+    
 
 def svc_param_selection(X, y, nfolds):
     Cs = [1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2]
@@ -119,14 +61,15 @@ class MidpointNormalize(Normalize):
 
 
 if __name__ == '__main__':
-    train_data = pd.read_csv('train.csv')
-    train_data = parseData(train_data)
-    start = time.time()
+    train_data = pd.read_csv('final_train_data.csv')
+    print ("Splitting data...")
     X, y = getFeatures(x_features = ['log_goal', 'backers_count',
                                      'duration_weeks'])
     X_train, X_test, y_train, y_test = splitData(X, y, 0.2, [])
-    end = time.time()
-    print ("split data takes: ", end-start)
+    print ("finished splitting data.")
+##    scaler = MinMaxScaler()
+##    X_train = scaler.fit_transform(X_train)
+##    X_test = scaler.fit_transform(X_test)
     y_train = y_train.replace(0, -1).values
     y_test = y_test.replace(0, -1).values
 ##
@@ -150,20 +93,28 @@ if __name__ == '__main__':
 ##    print (linear_acc)
 
     # polynomial kernel
-    degrees = [2, 4, 8, 16]
-    coefs = [1e-5, 1e-1, 1, 1e1, 1e2]
+    degrees = [2, 4, 8]
+    coefs = [1e-5, 1e-1, 1e2]
     poly_accs = {}
-    for d in degrees:
+    iters = [1e5, 1e6]
+    Cs = [1e-5, 1e-4]
+
+    for c in Cs:
         print ("Start training polynomial kernel...")
-        poly_model = svm.SVC(kernel='poly', degree=d, tol=5e-3)
-        poly_model.fit(X_train, y_train)
+        poly_model = svm.SVC(kernel='poly', C = c, max_iter = 1e6, degree=4).fit(X_train, y_train)
         print ("Finish training polynomial kernel")
+
+        train_loss = hingeLoss(X_train, y_train, poly_model)
+        test_loss = hingeLoss(X_test, y_test, poly_model)
+        
         poly_train_acc = poly_model.score(X_train, y_train)
         poly_test_acc = poly_model.score(X_test, y_test)
-        print ("Degree: ", d)
+        print ("iteration ", c)
+        print ("Polynomial train loss: ", train_loss)
+        print ("Polynomial test loss: ", test_loss)
         print ("Polynomial train accuracy: ", poly_train_acc)
         print ("Polynomail test accuracy: ", poly_test_acc)
-        poly_accs[d] = (poly_train_acc, poly_test_acc)
+        poly_accs[c] = (train_loss, test_loss)
     print (poly_accs)
 ##
 
