@@ -17,6 +17,8 @@ from numpy import array
 from numpy import asarray
 from numpy import zeros
 
+from get_metrics import *
+
 # Keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Embedding, LSTM, Merge, TimeDistributed
@@ -95,30 +97,30 @@ def complex_model(input_size, rate = 0.2):
     print(B1.summary())
 
     # Branch 2
-#    B2 = Sequential()
-#    e = Embedding(vocab_size, 50, weights=[embedding_matrix], input_length=input_length, trainable=False)
-#    B2.add(e)
-#    B2.add(LSTM(10, return_sequences=True, dropout = rate))
-##    B2.add(Dropout(rate))
-#    B2.add(Flatten())
-#    B2.add(Dense(40, activation = 'sigmoid'))
+    B2 = Sequential()
+    e = Embedding(vocab_size, 50, weights=[embedding_matrix], input_length=input_length, trainable=False)
+    B2.add(e)
+    B2.add(LSTM(32, return_sequences=True, dropout = rate))
 #    B2.add(Dropout(rate))
-#    print(B2.summary())
+    B2.add(Flatten())
+    B2.add(Dense(40, activation = 'sigmoid'))
+    B2.add(Dropout(rate))
+    print(B2.summary())
     
-    # Branch 3
-    B3 = Sequential()
-    e = Embedding(vocab_size1, 50, weights=[embedding_matrix1], input_length=input_length1, trainable=False)
-    B3.add(e)
-    B3.add(LSTM(10, return_sequences=True, dropout = rate))
-    B3.add(Flatten())
-    B3.add(Dense(40, activation = 'sigmoid'))
-    B3.add(Dropout(rate))
-    print(B3.summary())
+#    # Branch 3
+#    B3 = Sequential()
+#    e = Embedding(vocab_size1, 50, weights=[embedding_matrix1], input_length=input_length1, trainable=False)
+#    B3.add(e)
+#    B3.add(LSTM(10, return_sequences=True, dropout = rate))
+#    B3.add(Flatten())
+#    B3.add(Dense(40, activation = 'sigmoid'))
+#    B3.add(Dropout(rate))
+#    print(B3.summary())
     
     
     # Model
     model = Sequential()
-    model.add(Merge([B1, B3], mode = 'concat'))
+    model.add(Merge([B1, B2], mode = 'concat'))
     model.add(Dense(50, activation = 'relu'))
     model.add(Dropout(rate))
     model.add(Dense(10, activation = 'relu'))
@@ -131,18 +133,25 @@ def complex_model(input_size, rate = 0.2):
 
 X_train, X_test, y_train, y_test = splitData(X[['log_goal', 'disable_communication', 'backers_count',
                                                 'duration_weeks','sentiment']], 
-                                                y, 0, ['sentiment', 'disable_communication'])
+                                                y, 0.0, ['sentiment', 'disable_communication'])
 #X_train['backers_count'] = X['backers_count'].apply(lambda x: np.log(x) if x > 0 else 0)
 
 # Set callback functions to early stop training and save the best model so far
 callbacks = [EarlyStopping(monitor='val_loss', patience=2),
-             ModelCheckpoint(filepath='best_model.h5', monitor='val_loss', save_best_only=True)]
+             ModelCheckpoint(filepath='best_model_word.h5', monitor='val_loss', save_best_only=True)]
+
 model = complex_model(X_train.shape[1], 0.3)
 print(model.summary())
-model.fit([X_train, padded_docs1], 
+model.fit([X_train, padded_docs], 
           y_train, 
-          epochs=50, 
+          epochs=20, 
           callbacks = callbacks,
           validation_split=0.2)
+
+
+pred = model.predict([X_train, padded_docs])
+pred = np.round(pred)
+
+metrics(y_train, pred)
 
 

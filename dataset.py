@@ -14,7 +14,7 @@ from textblob import TextBlob # sentiment analysis
 from datetime import datetime
 
 #######Pre-process the data############
-train_data = pd.read_csv("train.csv")
+train_data = pd.read_csv("test.csv")
 
 # Fill in missing data
 train_data['name'].fillna(" ")
@@ -71,12 +71,14 @@ def countBuzzwords(desc):
 
 train_data['buzzword_count'] = train_data['desc'].apply(lambda d: countBuzzwords(d))
 
-def sentimentAnalysis(text):
-    analysis = TextBlob(str(text)).sentiment
-    return analysis
+train_data.to_csv("final_test.csv")
 
-train_data['text_polarity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).polarity)
-train_data['text_subjectivity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).subjectivity)
+#def sentimentAnalysis(text):
+#    analysis = TextBlob(str(text)).sentiment
+#    return analysis
+#
+#train_data['text_polarity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).polarity)
+#train_data['text_subjectivity'] = train_data['desc'].apply(lambda text: sentimentAnalysis(text).subjectivity)
 
 ########## Format dataset ##########
 def getFeatures(x_features=None, y_feature='final_status'): 
